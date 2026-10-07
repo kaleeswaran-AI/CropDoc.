@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CropDoc – Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f4ea;
+  --card: #fbfcf6;
+  --ink: #17301e;
+  --mut: #5d6f5f;
+  --line: #d5dcc6;
+  --g: #2e6b3a;
+  --gd: #1d4a28;
+  --y: #d99a1e;
+  --r: #b5381f;
+  --b: #2a5d8f;
+  --on: #fff;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101a13;
+    --card: #17251b;
+    --ink: #e8efe0;
+    --mut: #9db09f;
+    --line: #2b3d2f;
+    --g: #5fb06f;
+    --gd: #8fd09b;
+    --y: #e8b341;
+    --r: #e5745c;
+    --b: #6fa6dd;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #101a13;
+  --card: #17251b;
+  --ink: #e8efe0;
+  --mut: #9db09f;
+  --line: #2b3d2f;
+  --g: #5fb06f;
+  --gd: #8fd09b;
+  --y: #e8b341;
+  --r: #e5745c;
+  --b: #6fa6dd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top,0px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 Mukta,"Noto Sans Tamil","Noto Sans Devanagari",system-ui,sans-serif;
+}
+
+header {
+  padding: 22px 20px 8px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h1 {
+  font: 700 30px/1.1 Fraunces,Georgia,serif;
+  margin: 0;
+  color: var(--gd);
+}
+
+header p {
+  margin: 4px 0 0;
+  color: var(--mut);
+  max-width: 62ch;
+}
+
+nav {
+  display: flex;
+  gap: 6px;
+  max-width: 1000px;
+  margin: 12px auto 0;
+  padding: 0 20px;
+  overflow-x: auto;
+}
+
+nav button {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 9px 14px;
+  border-radius: 999px;
+  font: 600 15px Mukta,sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+nav button.on {
+  background: var(--g);
+  color: var(--on);
+  border-color: var(--g);
+}
+
+button: focus-visible,
+select: focus-visible,
+input: focus-visible,
+textarea: focus-visible {
+  outline: 3px solid var(--y);
+  outline-offset: 2px;
+}
+
+main {
+  max-width: 1000px;
+  margin: 16px auto 40px;
+  padding: 0 20px;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.on {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0,380px) minmax(0,1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+@media(max-width:760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.phone {
+  border: 2px solid var(--gd);
+  border-radius: 26px;
+  padding: 16px;
+  background: var(--card);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--card);
+  margin-bottom: 14px;
+}
+
+h2 {
+  font: 700 19px Fraunces,Georgia,serif;
+  margin: 0 0 8px;
+  color: var(--gd);
+}
+
+h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0;
+}
+
+label {
+  font-size: 14px;
+  color: var(--mut);
+  display: block;
+}
+
+select,
+input[type=text],
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+input[type=range] {
+  width: 100%;
+  accent-color: var(--g);
+}
+
+.btn {
+  border: 0;
+  background: var(--g);
+  color: var(--on);
+  padding: 9px 14px;
+  border-radius: 8px;
+  font: 600 15px Mukta,sans-serif;
+  cursor: pointer;
+}
+
+.btn.alt {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn.y {
+  background: var(--y);
+  color: #1b1500;
+}
+
+.seg button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  padding: 5px 10px;
+  font: 600 14px Mukta,sans-serif;
+  cursor: pointer;
+}
+
+.seg button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.seg button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.seg button.on {
+  background: var(--gd);
+  color: var(--bg);
+}
+
+.tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.ok {
+  color: var(--g);
+}
+
+.warn {
+  color: var(--y);
+}
+
+.bad {
+  color: var(--r);
+}
+
+.info {
+  color: var(--b);
+}
+
+.bar {
+  height: 10px;
+  background: var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--g);
+}
+
+.crops {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.crops button {
+  flex: 1;
+  min-width: 64px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 8px 4px;
+  cursor: pointer;
+  font: 600 14px Mukta,sans-serif;
+}
+
+.crops button.on {
+  border-color: var(--g);
+  background: var(--g);
+  color: var(--on);
+}
+
+.leaf {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #cfe0b8;
+  border: 1px dashed var(--g);
+  overflow: hidden;
+  color: #274a2c;
+  text-align: center;
+  font-size: 14px;
+}
+
+.leaf img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sms {
+  background: #e3f0d8;
+  color: #17301e;
+  padding: 10px 12px;
+  border-radius: 14px 14px 14px 2px;
+  font-size: 14px;
+  margin-top: 8px;
+  max-width: 340px;
+}
+
+.k {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.k div {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--card);
+}
+
+.k b {
+  font: 700 24px Fraunces,Georgia,serif;
+  display: block;
+  color: var(--gd);
+}
+
+.k span {
+  font-size: 13px;
+  color: var(--mut);
+}
+
+.case {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--mut);
+}
+
+.dist {
+  display: grid;
+  grid-template-columns: 90px 1fr 40px;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.wf {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.wf span {
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 7px;
+  color: var(--mut);
+}
+
+.wf span.on {
+  background: var(--g);
+  color: var(--on);
+  border-color: var(--g);
+}
+
+.maps {
+  display: flex;
+  gap: 10px;
+}
+
+.maps figure {
+  margin: 0;
+  flex: 1;
+}
+
+.maps canvas {
+  width: 100%;
+  image-rendering: pixelated;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+figcaption {
+  font-size: 12px;
+  color: var(--mut);
+}
+
+.cnn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.cnn span {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.pr {
+  display: grid;
+  grid-template-columns: 1fr 90px 36px;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  margin: 3px 0;
+}
+
+/* ---------- professional theme ---------- */
+:root {
+  --h1: #173f22;
+  --h2: #2e6b3a;
+  --h3: #6aa84f;
+  --bez: #16241a;
+  --b1: #3a7d47;
+  --b2: #2a6535;
+  --sh: 0 1px 2px rgba(20,40,25,.06),0 12px 28px -16px rgba(20,40,25,.30);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --h1: #0b1f13;
+    --h2: #17402a;
+    --h3: #2f6b3a;
+    --bez: #0a110c;
+    --b1: #3f8f50;
+    --b2: #2f7a40;
+    --sh: 0 1px 2px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --h1: #0b1f13;
+  --h2: #17402a;
+  --h3: #2f6b3a;
+  --bez: #0a110c;
+  --b1: #3f8f50;
+  --b2: #2f7a40;
+  --sh: 0 1px 2px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.7);
+}
+
+body {
+  background: radial-gradient(900px 500px at 90% -5%,rgba(217,154,30,.12),transparent 60%),radial-gradient(900px 600px at -10% 25%,rgba(46,107,58,.14),transparent 60%),var(--bg);
+  background-attachment: fixed;
+}
+
+body: :before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='rgba(46,107,58,0.10)' stroke-width='1.4'%3E%3Cpath d='M12 30c0-12 9-20 20-20 0 12-8 20-20 20z'/%3E%3Cpath d='M12 30L28 14'/%3E%3Cpath d='M46 62c0-9 7-15 15-15 0 9-6 15-15 15z'/%3E%3Cpath d='M46 62L58 50'/%3E%3C/g%3E%3Ccircle cx='60' cy='14' r='1.6' fill='rgba(217,154,30,0.18)'/%3E%3Ccircle cx='18' cy='58' r='1.6' fill='rgba(217,154,30,0.18)'/%3E%3C/svg%3E");
+}
+
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top,0px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px max(16px,calc((100% - 1100px)/2 + 16px));
+  background: var(--bg);
+  background: color-mix(in srgb,var(--bg) 84%,transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.brand b {
+  font: 700 21px Fraunces,Georgia,serif;
+  color: var(--gd);
+  line-height: 1;
+}
+
+.brand small {
+  display: block;
+  font-size: 11px;
+  color: var(--mut);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.top nav {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  justify-content: flex-end;
+}
+
+.top nav button {
+  border: 0;
+  background: transparent;
+  color: var(--mut);
+  padding: 8px 14px;
+  transition: background .15s,color .15s;
+}
+
+.top nav button:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.top nav button.on {
+  background: var(--g);
+  color: var(--on);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(135deg,var(--h1),var(--h2) 60%,var(--h3));
+  padding: 46px 20px 90px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.10)' stroke-width='1.4'%3E%3Cpath d='M12 30c0-12 9-20 20-20 0 12-8 20-20 20z'/%3E%3Cpath d='M12 30L28 14'/%3E%3Cpath d='M46 62c0-9 7-15 15-15 0 9-6 15-15 15z'/%3E%3Cpath d='M46 62L58 50'/%3E%3C/g%3E%3Ccircle cx='60' cy='14' r='1.6' fill='rgba(255,255,255,0.14)'/%3E%3Ccircle cx='18' cy='58' r='1.6' fill='rgba(255,255,255,0.14)'/%3E%3C/svg%3E");
+}
+
+.hero svg.hill {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 64px;
+}
+
+.hw {
+  position: relative;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.eyebrow {
+  font: 600 12px Mukta,sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #f3cf7a;
+}
+
+.hero h1 {
+  font: 700 clamp(30px,5vw,48px)/1.08 Fraunces,Georgia,serif;
+  margin: 10px 0 12px;
+  color: #fff;
+  max-width: 20ch;
+}
+
+.hero p {
+  margin: 0;
+  color: rgba(255,255,255,.88);
+  max-width: 58ch;
+  font-size: 17px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.chips span {
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+main {
+  max-width: 1100px;
+  margin-top: -34px;
+  position: relative;
+}
+
+.panel,
+.k div {
+  border-radius: 14px;
+  box-shadow: var(--sh);
+}
+
+.panel h2 {
+  border-left: 4px solid var(--y);
+  padding-left: 10px;
+}
+
+.k div {
+  border-top: 3px solid var(--y);
+}
+
+.phone {
+  border: 9px solid var(--bez);
+  border-radius: 38px;
+  padding: 24px 14px 16px;
+  position: relative;
+  box-shadow: 0 26px 50px -24px rgba(0,0,0,.55);
+}
+
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 64px;
+  height: 6px;
+  margin-left: -32px;
+  border-radius: 4px;
+  background: var(--bez);
+}
+
+.btn {
+  background: linear-gradient(180deg,var(--b1),var(--b2));
+  box-shadow: 0 6px 14px -8px var(--b2);
+  transition: transform .15s,box-shadow .15s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn.alt {
+  background: transparent;
+  box-shadow: none;
+}
+
+.btn.alt:hover {
+  background: var(--line);
+}
+
+.btn.y {
+  background: var(--y);
+}
+
+.wf span {
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.wf span.on {
+  box-shadow: 0 4px 10px -6px var(--g);
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  background: var(--card);
+  margin-top: 36px;
+  padding: 28px 20px calc(24px + env(safe-area-inset-bottom,0px));
+}
+
+.fw {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 22px;
+}
+
+.fw b {
+  font: 700 16px Fraunces,Georgia,serif;
+  color: var(--gd);
+}
+
+.fw p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--mut);
+}
+
+.copy {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--mut);
+  display: block;
+}
+
+@media (max-width:640px) {
+  .top {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .top nav {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+  .hero {
+    padding-top: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none!important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="top"><div class="brand"><svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" style="fill:var(--g)"/><path d="M9 24c0-8 6-14 15-14 0 8-6 14-15 14z" fill="#fff"/><path d="M9 24l10-10" stroke="#2e6b3a" stroke-width="1.6" fill="none"/><circle cx="26" cy="26" r="6.5" style="fill:var(--y)"/><path d="M26 22.8v6.4M22.8 26h6.4" stroke="#1b1500" stroke-width="1.9"/></svg><div><b>CropDoc</b></div></div><nav id="nav"></nav></div>
+<section class="hero"><div class="hw"><span class="eyebrow">AI crop health · Tamil Nadu</span>
+<h1>Spot crop disease and pests before they spread.</h1>
+<p>Photo diagnosis on the phone, weather-based early warnings and expert help from your KVK, in Tamil, Marathi, Hindi and English.</p>
+<div class="chips"><span>5 crops</span><span>14 diseases</span><span>2 pests</span><span>4 languages</span><span>Works offline</span></div></div>
+<svg class="hill" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40C200 6 380 64 600 36S1000 6 1200 38V64H0Z" style="fill:var(--bg);opacity:.45"/><path d="M0 52C240 24 420 64 640 48S1000 30 1200 50V64H0Z" style="fill:var(--bg)"/></svg></section>
+<main>
+<section class="tab" id="t0"></section>
+<section class="tab" id="t1"></section>
+<section class="tab" id="t2"></section>
+<section class="tab" id="t3"></section>
+</main>
+<footer><div class="fw"><div><b>CropDoc</b><p>Closed-loop crop health for farmers: predict, diagnose, advise and learn.</p></div>
+<div><b>How it works</b><p>Photo diagnosis on the phone, weather early warning, KVK expert review and outcome learning.</p></div>
+<div><b>Prototype notice</b><p>Diagnosis and pest boxes are simulated for demonstration. A production version needs trained CNN and YOLOv8 models.</p></div></div>
+<div class="fw copy">© 2026 CropDoc · Hackathon prototype</div></footer>
+<script>
+
+// ============================================================
+// 1. DATA: tab names
+// ============================================================
+const TABS = ['Farmer app', 'Early warning', 'KVK dashboard', 'District view'];
+
+// ============================================================
+// 2. DATA: crops, early-warning rules (rule = humidity %, temp range, rain mm) and advice text in 4 languages (t)
+// ============================================================
+const CROPS = {
+    cotton: { n: 'Cotton', d: 'Pink bollworm', rule: { h: 80, t: [25, 32], r: 0 }, t: {
+            en: 'Install pheromone traps (5 per acre). Spray 5% neem seed extract. If more than 10% of bolls are damaged, ask your KVK about an approved insecticide.',
+            hi: 'फेरोमोन ट्रैप (5 प्रति एकड़) लगाएँ। 5% नीम बीज अर्क छिड़कें। 10% से अधिक बॉल खराब हों तो KVK से अनुशंसित कीटनाशक पूछें।',
+            mr: 'फेरोमोन सापळे (प्रति एकर ५) लावा. ५% निंबोळी अर्क फवारा. १०% पेक्षा जास्त बोंडे खराब असल्यास KVK कडून शिफारस केलेले कीटकनाशक विचारा.',
+            ta: 'பெரோமோன் பொறிகளை (ஏக்கருக்கு 5) வையுங்கள். 5% வேப்பங்கொட்டை சாறு தெளிக்கவும். 10%க்கு மேல் காய்கள் சேதமடைந்தால், அங்கீகரிக்கப்பட்ட பூச்சிக்கொல்லி பற்றி KVK-விடம் கேளுங்கள்.'
+        } },
+    soybean: { n: 'Soybean', d: 'Soybean rust', rule: { h: 85, t: [20, 26], r: 5 }, t: {
+            en: 'Remove badly infected leaves. Spray the recommended fungicide only if rust covers over 10% of leaves, and not right before rain.',
+            hi: 'अधिक संक्रमित पत्ते हटाएँ। 10% से अधिक पत्तों पर रतुआ हो तभी अनुशंसित फफूंदनाशक छिड़कें, बारिश से ठीक पहले नहीं।',
+            mr: 'जास्त बाधित पाने काढा. १०% पेक्षा जास्त पानांवर तांबेरा असेल तरच शिफारस केलेले बुरशीनाशक फवारा, पावसापूर्वी नको.',
+            ta: 'மிகவும் பாதிக்கப்பட்ட இலைகளை அகற்றுங்கள். 10%க்கு மேற்பட்ட இலைகளில் துரு நோய் இருந்தால் மட்டுமே பரிந்துரைக்கப்பட்ட பூஞ்சைக்கொல்லியைத் தெளியுங்கள்; மழைக்கு சற்று முன் தெளிக்க வேண்டாம்.'
+        } },
+    onion: { n: 'Onion', d: 'Purple blotch', rule: { h: 80, t: [25, 30], r: 0 }, t: {
+            en: 'Improve drainage and plant spacing. At the first spots, spray the recommended fungicide as per its label and repeat after 10 days.',
+            hi: 'जल निकासी और पौध दूरी सुधारें। पहले धब्बे दिखते ही लेबल अनुसार अनुशंसित फफूंदनाशक छिड़कें, 10 दिन बाद दोहराएँ।',
+            mr: 'निचरा आणि रोपांतील अंतर सुधारा. पहिले डाग दिसताच लेबलनुसार शिफारस केलेले बुरशीनाशक फवारा, १० दिवसांनी पुन्हा करा.',
+            ta: 'வடிகால் மற்றும் செடி இடைவெளியை மேம்படுத்துங்கள். முதல் புள்ளிகள் தோன்றியவுடன் லேபிள் படி பரிந்துரைக்கப்பட்ட பூஞ்சைக்கொல்லியைத் தெளித்து, 10 நாட்களுக்குப் பிறகு மீண்டும் தெளியுங்கள்.'
+        } },
+    grapes: { n: 'Grapes', d: 'Downy mildew', rule: { h: 85, t: [18, 28], r: 10 }, t: {
+            en: 'Prune to open the canopy and remove infected leaves. Spray 1% Bordeaux mixture before rain is expected.',
+            hi: 'छंटाई करके छत्र खोलें और संक्रमित पत्ते हटाएँ। बारिश से पहले 1% बोर्डो मिश्रण छिड़कें।',
+            mr: 'छाटणी करून झाडोरा मोकळा करा व बाधित पाने काढा. पाऊस येण्यापूर्वी १% बोर्डो मिश्रण फवारा.',
+            ta: 'கவாத்து செய்து இலைப்பரப்பைத் திறந்துவிடுங்கள்; பாதிக்கப்பட்ட இலைகளை அகற்றுங்கள். மழை எதிர்பார்க்கப்படுவதற்கு முன் 1% போர்டோ கலவையைத் தெளியுங்கள்.'
+        } },
+    sugarcane: { n: 'Sugarcane', d: 'Red rot', rule: { h: 85, t: [25, 35], r: 20 }, t: {
+            en: 'Uproot and burn infected clumps. Plant disease-free setts and avoid waterlogging.',
+            hi: 'संक्रमित झुंड उखाड़कर जला दें। रोगमुक्त बीज-टुकड़े लगाएँ और जलभराव से बचें।',
+            mr: 'बाधित बेटे उपटून जाळा. रोगमुक्त बेणे वापरा आणि पाणी साचू देऊ नका.',
+            ta: 'பாதிக்கப்பட்ட கரும்புக் கொத்துகளைப் பிடுங்கி எரித்துவிடுங்கள். நோயற்ற கரணைகளை நடவு செய்து, நீர் தேங்குவதைத் தவிர்க்கவும்.'
+        } }
+};
+
+// ============================================================
+// 3. DATA: advice by disease type (f = fungal, b = bacterial, v = viral)
+// ============================================================
+const ADV = {
+    f: { en: 'Remove badly infected leaves. Spray the recommended fungicide as per label, not just before rain. Check again in 7 days.', hi: 'ज्यादा संक्रमित पत्ते हटाएँ। लेबल के अनुसार अनुशंसित फफूंदनाशक छिड़कें, बारिश से ठीक पहले नहीं। 7 दिन बाद दोबारा जाँचें।', mr: 'जास्त बाधित पाने काढा. लेबलनुसार शिफारस केलेले बुरशीनाशक फवारा, पावसापूर्वी नको. ७ दिवसांनी पुन्हा तपासा.', ta: 'மிகவும் பாதிக்கப்பட்ட இலைகளை அகற்றுங்கள். லேபிள் படி பரிந்துரைக்கப்பட்ட பூஞ்சைக்கொல்லியைத் தெளியுங்கள்; மழைக்கு சற்று முன் வேண்டாம். 7 நாட்களில் மீண்டும் சரிபாருங்கள்.' },
+    b: { en: 'Remove infected leaves, avoid working in wet fields and avoid overhead irrigation. Ask your KVK for a recommended copper-based spray.', hi: 'संक्रमित पत्ते हटाएँ, गीले खेत में काम और ऊपर से सिंचाई से बचें। KVK से अनुशंसित कॉपर-आधारित छिड़काव पूछें।', mr: 'बाधित पाने काढा, ओल्या शेतात काम करणे व वरून पाणी देणे टाळा. KVK कडून शिफारस केलेली तांबेयुक्त फवारणी विचारा.', ta: 'பாதிக்கப்பட்ட இலைகளை அகற்றுங்கள்; ஈரமான வயலில் வேலை செய்வதையும் மேலிருந்து நீர் பாய்ச்சுவதையும் தவிர்க்கவும். பரிந்துரைக்கப்பட்ட காப்பர் தெளிப்பு குறித்து KVK-விடம் கேளுங்கள்.' },
+    v: { en: 'Yellowing and curling is usually spread by insects such as whitefly. Remove badly affected plants, use yellow sticky traps and neem spray, and ask your KVK.', hi: 'पीलापन और मुड़ना आमतौर पर सफेद मक्खी जैसे कीटों से फैलता है। ज्यादा प्रभावित पौधे हटाएँ, पीले चिपचिपे ट्रैप और नीम का छिड़काव करें, KVK से पूछें।', mr: 'पिवळेपणा व पाने वाकडी होणे हे साधारणपणे पांढरी माशी सारख्या किडींमुळे पसरते. जास्त बाधित झाडे काढा, पिवळे चिकट सापळे व निंबोळी फवारणी करा, KVK ला विचारा.', ta: 'மஞ்சளாதல் மற்றும் சுருளுதல் பொதுவாக வெள்ளை ஈ போன்ற பூச்சிகளால் பரவுகிறது. கடுமையாகப் பாதித்த செடிகளை அகற்றி, மஞ்சள் ஒட்டுப் பொறிகள் மற்றும் வேப்ப எண்ணெய் தெளிப்பைப் பயன்படுத்தி, KVK-விடம் கேளுங்கள்.' }
+};
+
+// ============================================================
+// 4. DATA: "healthy leaf" message and result object
+// ============================================================
+const H = { en: 'Leaf looks healthy. Keep watching it and follow weather alerts.', hi: 'पत्ता स्वस्थ दिखता है। निगरानी रखें और मौसम अलर्ट देखें।', mr: 'पान निरोगी दिसते. लक्ष ठेवा आणि हवामान सूचना पाहा.', ta: 'இலை ஆரோக்கியமாக உள்ளது. தொடர்ந்து கவனித்து வானிலை எச்சரிக்கைகளைப் பின்பற்றுங்கள்.' };
+const HEALTHY = { n: 'Healthy leaf', ta: 'ஆரோக்கியமான இலை', k: 'H' };
+// w = weights for [yellow, brown, orange, white, dark, spot-count]; v = how the sample leaf is drawn
+
+// ============================================================
+// 5. DATA: diseases per crop. w = weights for [yellow, brown, orange, white, dark, spot-count]; v = how the sample leaf is drawn
+// ============================================================
+const DZ = {
+    cotton: [{ n: 'Alternaria leaf spot', ta: 'ஆல்டர்நேரியா இலைப்புள்ளி', k: 'f', w: [0, 4, 0, 0, 1, 1.5], v: { t: 'spot', c: '#7a4a22', n: 12 } },
+        { n: 'Bacterial blight', ta: 'பாக்டீரியா இலைக்கருகல்', k: 'b', w: [0, 1, 0, 0, 4, 2], v: { t: 'spot', c: '#2a1a14', n: 14 } },
+        { n: 'Cotton leaf curl virus', ta: 'பருத்தி இலை சுருட்டை வைரஸ்', k: 'v', w: [4, 0, 0, 0, 0, -1], v: { t: 'patch', c: '#d8c230', n: 6 } }],
+    soybean: [{ n: 'Soybean rust', ta: 'சோயா துரு நோய்', p: 1, w: [0, 1, 5, 0, 0, 1], v: { t: 'pust', c: '#d9701a', n: 45 } },
+        { n: 'Frogeye leaf spot', ta: 'தவளைக்கண் இலைப்புள்ளி', k: 'f', w: [0, 3, 0, 2, 0, 2], v: { t: 'spot', c: '#7a4a22', c2: '#e0e0d8', n: 10 } },
+        { n: 'Yellow mosaic virus', ta: 'மஞ்சள் தேமல் வைரஸ்', k: 'v', w: [5, 0, 0, 0, 0, -1], v: { t: 'patch', c: '#d8c230', n: 6 } }],
+    onion: [{ n: 'Purple blotch', ta: 'ஊதா கருகல் நோய்', p: 1, w: [0, 2, 0, 0, 5, .5], v: { t: 'spot', c: '#4a2540', n: 9 } },
+        { n: 'Stemphylium blight', ta: 'ஸ்டெம்பிலியம் கருகல்', k: 'f', w: [5, 1, 0, 0, 0, 1.5], v: { t: 'spot', c: '#d8c230', r: 7, n: 16 } }],
+    grapes: [{ n: 'Downy mildew', ta: 'டவுனி பூஞ்சை நோய்', p: 1, w: [3, 0, 0, 1, 0, 1], v: { t: 'spot', c: '#d8c230', r: 14, n: 9 } },
+        { n: 'Powdery mildew', ta: 'சாம்பல் நோய்', k: 'f', w: [0, 0, 0, 5, 0, 0], v: { t: 'powder', c: '#eeeeea', n: 10 } },
+        { n: 'Black rot', ta: 'கருப்பு அழுகல்', k: 'f', w: [0, 2.5, 0, 0, 3, 2], v: { t: 'spot', c: '#3a2218', n: 10 } }],
+    sugarcane: [{ n: 'Red rot', ta: 'செவ்வழுகல் நோய்', p: 1, w: [0, 3, 1.5, 0, 0, 1.5], v: { t: 'streak', c: '#8a2a1a', n: 16 } },
+        { n: 'Sugarcane rust', ta: 'கரும்பு துரு நோய்', k: 'f', w: [0, 0, 5, 0, 0, 1.5], v: { t: 'pust', c: '#d9701a', n: 45 } },
+        { n: 'Yellow leaf disease', ta: 'மஞ்சள் இலை நோய்', k: 'v', w: [5, 0, 0, 0, 0, -1], v: { t: 'patch', c: '#d8c230', n: 6 } }]
+};
+
+// ============================================================
+// 6. DATA: pests (whitefly, aphid) with advice
+// ============================================================
+const PESTS = {
+    w: { n: 'Whitefly', ta: 'வெள்ளை ஈ', a: { en: 'Hang yellow sticky traps (about 10 per acre) and spray neem oil. Whiteflies also spread leaf curl and mosaic viruses, so remove badly affected plants early.', hi: 'पीले चिपचिपे ट्रैप (लगभग 10 प्रति एकड़) लगाएँ और नीम तेल छिड़कें। सफेद मक्खी पत्ता मुड़ने और मोज़ेक वायरस भी फैलाती है, इसलिए ज्यादा प्रभावित पौधे जल्दी हटाएँ।', mr: 'पिवळे चिकट सापळे (एकरी सुमारे १०) लावा आणि निंबोळी तेल फवारा. पांढरी माशी पाने वाकडी होणे व मोझॅक विषाणूही पसरवते, म्हणून जास्त बाधित झाडे लवकर काढा.', ta: 'மஞ்சள் ஒட்டுப் பொறிகளை (ஏக்கருக்கு சுமார் 10) வைத்து வேப்ப எண்ணெய் தெளியுங்கள். வெள்ளை ஈ இலை சுருட்டை, தேமல் வைரஸ்களையும் பரப்பும்; கடுமையாகப் பாதித்த செடிகளை முன்கூட்டியே அகற்றுங்கள்.' } },
+    d: { n: 'Aphid', ta: 'அசுவினி', a: { en: 'Spray neem oil or a strong water jet on the shoots. Protect ladybirds and other natural enemies, and ask your KVK before using any insecticide.', hi: 'नीम तेल या तेज पानी की धार से टहनियों पर छिड़काव करें। लेडीबर्ड जैसे प्राकृतिक शत्रुओं को बचाएँ और कीटनाशक से पहले KVK से पूछें।', mr: 'निंबोळी तेल किंवा जोरदार पाण्याची धार कोंबांवर फवारा. लेडीबर्ड सारख्या नैसर्गिक शत्रूंचे रक्षण करा आणि कीटकनाशकापूर्वी KVK ला विचारा.', ta: 'வேப்ப எண்ணெய் அல்லது வேகமான நீர்த்தாரையை தளிர்களில் தெளியுங்கள். பொறிவண்டு போன்ற இயற்கை எதிரிகளைக் காப்பாற்றி, பூச்சிக்கொல்லிக்கு முன் KVK-விடம் கேளுங்கள்.' } }
+};
+const pname = k => S.lang === 'ta' ? PESTS[k].ta + ' (' + PESTS[k].n + ')' : PESTS[k].n;
+const zname = z => S.lang === 'ta' ? z.ta + ' (' + z.n + ')' : z.n;
+
+// ============================================================
+// 7. DATA: language names and interface text
+// ============================================================
+const LANGS = { en: 'English', hi: 'हिन्दी', mr: 'मराठी', ta: 'தமிழ்' };
+const UI = { en: { cap: 'Take a crop photo', sure: 'Confidence', adv: 'What to do', low: 'Not sure enough. Sent to the KVK officer.', sev: ['Mild', 'Moderate', 'Severe'] },
+    hi: { cap: 'फसल की फोटो लें', sure: 'भरोसा', adv: 'क्या करें', low: 'पक्का नहीं। KVK अधिकारी को भेजा गया।', sev: ['हल्का', 'मध्यम', 'गंभीर'] },
+    mr: { cap: 'पिकाचा फोटो घ्या', sure: 'खात्री', adv: 'काय करावे', low: 'खात्री कमी. KVK अधिकाऱ्याकडे पाठवले.', sev: ['सौम्य', 'मध्यम', 'तीव्र'] },
+    ta: { cap: 'பயிரின் படம் எடுக்கவும்', sure: 'நம்பகத்தன்மை', adv: 'என்ன செய்ய வேண்டும்', low: 'உறுதியாகத் தெரியவில்லை. KVK அதிகாரிக்கு அனுப்பப்பட்டது.', sev: ['லேசானது', 'மிதமானது', 'கடுமையானது'] } };
+
+// ============================================================
+// 8. APP STATE: one object holds everything the screen shows
+// ============================================================
+const S = { tab: 0, lang: 'mr', online: true, district: 'Coimbatore', crop: 'cotton', res: null, preview: null, cases: [], nid: 1,
+    counts: { Coimbatore: 12, Thanjavur: 16, Madurai: 9, Salem: 11, Erode: 7 }, alerts: { Coimbatore: 2, Thanjavur: 4, Madurai: 1, Salem: 3, Erode: 1 },
+    fb: { yes: 0, no: 0 }, labels: 0, w: { h: 86, t: 27, r: 8 }, smsText: null };
+const THRESH = 70, $ = id => document.getElementById(id);
+const opts = (o, sel) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k == sel ? ' selected' : ''}>${v.n || v}</option>`).join('');
+function step(n) { return `<div class="wf">${['Data', 'Early warning', 'Photo diagnosis', 'Guidance', 'Escalation', 'Expert review', 'Follow-up', 'Learning'].map((x, i) => `<span class="${n.includes(i) ? 'on' : ''}">${i + 1}. ${x}</span>`).join('')}</div>`; }
+
+// ============================================================
+// 9. IMAGE ANALYSIS: colour conversion, then the CNN-style diagnosis
+// ============================================================
+function hsv(r, g, b) { r /= 255; g /= 255; b /= 255; const m = Math.max(r, g, b), n = Math.min(r, g, b), d = m - n; let h = 0; if (d) {
+    h = m == r ? ((g - b) / d) % 6 : m == g ? (b - r) / d + 2 : (r - g) / d + 4;
+    h *= 60;
+    if (h < 0)
+        h += 360;
+} return [h, m ? d / m : 0, m]; }
+function analyse(src, crop) {
+    const N = 96, M = N * N, cv = document.createElement('canvas');
+    cv.width = cv.height = N;
+    const x = cv.getContext('2d');
+    x.drawImage(src, 0, 0, N, N);
+    const pd = x.getImageData(0, 0, N, N).data, gr = new Float32Array(M), cls = new Uint8Array(M), cnt = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < M; i++) {
+        const r = pd[4 * i], g = pd[4 * i + 1], b = pd[4 * i + 2];
+        gr[i] = .3 * r + .59 * g + .11 * b;
+        const [h, s, v] = hsv(r, g, b);
+        let c;
+        if (v < .3)
+            c = 5;
+        else if (s < .15 && v > .75)
+            c = 4;
+        else if (h >= 70 && h <= 170 && s > .2)
+            c = 0;
+        else if (h >= 45 && h < 70)
+            c = v > .6 ? 1 : 2;
+        else if (h >= 15 && h < 45)
+            c = (s > .5 && v > .6) ? 3 : 2;
+        else if (h < 15 || h > 330)
+            c = v < .65 ? 2 : 3;
+        else
+            c = 5;
+        cls[i] = c;
+        cnt[c]++;
+    }
+    let spots = 0;
+    const seen = new Uint8Array(M);
+    for (let i = 0; i < M; i++)
+        if (cls[i] && !seen[i]) {
+            const st = [i];
+            let n = 0;
+            seen[i] = 1;
+            while (st.length) {
+                const p = st.pop(), cx = p % N, cy = (p / N) | 0;
+                n++;
+                for (const q of [cx > 0 ? p - 1 : -1, cx < N - 1 ? p + 1 : -1, cy > 0 ? p - N : -1, cy < N - 1 ? p + N : -1])
+                    if (q >= 0 && cls[q] && !seen[q]) {
+                        seen[q] = 1;
+                        st.push(q);
+                    }
+            }
+            if (n >= 5)
+                spots++;
+        }
+    const pests = [], pp = [0, 0, 0, 0, 0, 0], nb = p => { const cx = p % N, cy = (p / N) | 0; return [cx > 0 ? p - 1 : -1, cx < N - 1 ? p + 1 : -1, cy > 0 ? p - N : -1, cy < N - 1 ? p + N : -1]; };
+    for (const cl of [4, 5]) {
+        const sn = new Uint8Array(M);
+        for (let i = 0; i < M; i++)
+            if (cls[i] === cl && !sn[i]) {
+                const st = [i];
+                let n = 0, x0 = N, y0 = N, x1 = 0, y1 = 0;
+                sn[i] = 1;
+                while (st.length) {
+                    const p = st.pop(), cx = p % N, cy = (p / N) | 0;
+                    n++;
+                    x0 = Math.min(x0, cx);
+                    x1 = Math.max(x1, cx);
+                    y0 = Math.min(y0, cy);
+                    y1 = Math.max(y1, cy);
+                    for (const q of nb(p))
+                        if (q >= 0 && cls[q] === cl && !sn[q]) {
+                            sn[q] = 1;
+                            st.push(q);
+                        }
+                }
+                if (n >= 5 && n <= 30) {
+                    let g = 0, t = 0;
+                    for (let yy = Math.max(0, y0 - 2); yy <= Math.min(N - 1, y1 + 2); yy++)
+                        for (let xx = Math.max(0, x0 - 2); xx <= Math.min(N - 1, x1 + 2); xx++) {
+                            if (xx >= x0 && xx <= x1 && yy >= y0 && yy <= y1)
+                                continue;
+                            t++;
+                            if (cls[yy * N + xx] === 0)
+                                g++;
+                        }
+                    if (t && g / t > .8) {
+                        pp[cl] += n;
+                        pests.push({ x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1, k: cl === 4 ? 'w' : 'd', conf: Math.min(97, 60 + n * 3) });
+                    }
+                }
+            }
+    }
+    spots = Math.max(0, spots - pests.length);
+    cnt[4] -= pp[4];
+    cnt[5] -= pp[5];
+    let sh = 0;
+    const edge = new Uint8ClampedArray(M * 4), lm = new Uint8ClampedArray(M * 4);
+    for (let i = 0; i < M; i++) {
+        edge[4 * i + 3] = 255;
+        const les = cls[i] > 0 && cls[i] !== 0;
+        lm[4 * i] = les ? 225 : pd[4 * i] * .45;
+        lm[4 * i + 1] = les ? 50 : pd[4 * i + 1] * .45;
+        lm[4 * i + 2] = les ? 40 : pd[4 * i + 2] * .45;
+        lm[4 * i + 3] = 255;
+    }
+    for (let y = 1; y < N - 1; y++)
+        for (let c = 1; c < N - 1; c++) {
+            const i = y * N + c;
+            sh += Math.abs(4 * gr[i] - gr[i - 1] - gr[i + 1] - gr[i - N] - gr[i + N]);
+            const gx = gr[i - N + 1] + 2 * gr[i + 1] + gr[i + N + 1] - gr[i - N - 1] - 2 * gr[i - 1] - gr[i + N - 1], gy = gr[i + N - 1] + 2 * gr[i + N] + gr[i + N + 1] - gr[i - N - 1] - 2 * gr[i - N] - gr[i - N + 1], e = Math.min(255, Math.hypot(gx, gy) / 2);
+            edge[4 * i] = edge[4 * i + 1] = edge[4 * i + 2] = e;
+        }
+    sh /= (N - 2) * (N - 2);
+    const f = [1, 2, 3, 4, 5].map(k => cnt[k] / M), les = f.reduce((a, b) => a + b, 0), fv = [...f, Math.min(spots / 20, 1) * .15], dz = DZ[crop];
+    const lg = dz.map(z => 14 * z.w.reduce((a, w, j) => a + w * fv[j], 0));
+    lg.push(4 - 40 * les);
+    const T = 1.5, mx = Math.max(...lg), ex = lg.map(l => Math.exp((l - mx) / T)), sm = ex.reduce((a, b) => a + b), pr = ex.map(e => e / sm);
+    const ti = pr.indexOf(Math.max(...pr)), fac = les > .02 ? .45 + .55 * Math.min(1, sh / 1.5) : 1, leaf = cnt[0] / M > .12 ? 1 : .5;
+    return { pests, pr, ti, top: ti < dz.length ? dz[ti] : HEALTHY, conf: Math.round(pr[ti] * fac * leaf * 100), sh, les, spots, edge, lm, sev: les < .08 ? 0 : les < .2 ? 1 : 2, list: [...dz, HEALTHY] };
+}
+
+// ============================================================
+// 10. RUN DIAGNOSIS: store the result, escalate to KVK if confidence is below THRESH
+// ============================================================
+function runImg(src) {
+    S.src = src;
+    const a = S.an = analyse(src, S.crop);
+    S.res = { crop: S.crop, conf: a.conf, sev: a.sev, dis: a.top.n, d: a.top };
+    if (a.conf < THRESH) {
+        const c = { id: S.nid++, crop: S.crop, dis: a.top.n, conf: a.conf, district: S.district, status: 'pending', queued: !S.online };
+        S.cases.push(c);
+        S.res.case = c.id;
+        if (S.online)
+            S.counts[S.district]++;
+    }
+    render();
+}
+
+// ============================================================
+// 11. SAMPLE LEAVES: draw demo leaves on a canvas, and canvas helpers
+// ============================================================
+function drawSample(crop, i, blur, pest) {
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 224;
+    const x = cv.getContext('2d');
+    let sd = 11 + i * 7;
+    const R = () => (sd = (sd * 9301 + 49297) % 233280) / 233280;
+    const g = x.createLinearGradient(0, 0, 224, 224);
+    g.addColorStop(0, '#4a8a3a');
+    g.addColorStop(1, '#3a7430');
+    x.fillStyle = g;
+    x.fillRect(0, 0, 224, 224);
+    x.strokeStyle = '#5da04a';
+    x.lineWidth = 4;
+    x.beginPath();
+    x.moveTo(0, 112);
+    x.lineTo(224, 112);
+    x.stroke();
+    const v = i >= 0 && DZ[crop][i].v;
+    if (v) {
+        x.fillStyle = v.c;
+        x.strokeStyle = v.c;
+        for (let k = 0; k < v.n; k++) {
+            const px = 20 + R() * 184, py = 20 + R() * 184;
+            if (v.t === 'streak') {
+                x.lineWidth = 8;
+                x.beginPath();
+                x.moveTo(px, py);
+                x.lineTo(px + 30 * R() - 15, py + 40);
+                x.stroke();
+            }
+            else {
+                const r = v.t === 'pust' ? 5 + R() * 2 : v.t === 'patch' ? 16 + R() * 12 : v.t === 'powder' ? 14 + R() * 10 : v.r || 12;
+                x.beginPath();
+                x.arc(px, py, r, 0, 7);
+                x.fill();
+                if (v.c2) {
+                    x.fillStyle = v.c2;
+                    x.beginPath();
+                    x.arc(px, py, r / 2.5, 0, 7);
+                    x.fill();
+                    x.fillStyle = v.c;
+                }
+            }
+        }
+    }
+    if (pest) {
+        x.fillStyle = pest === 'w' ? '#eeeeea' : '#14140c';
+        for (let k = 0; k < 12; k++) {
+            x.beginPath();
+            x.ellipse(20 + R() * 184, 20 + R() * 184, 5, 4, R() * 3, 0, 7);
+            x.fill();
+        }
+    }
+    if (!blur)
+        return cv;
+    const o = document.createElement('canvas');
+    o.width = o.height = 224;
+    const y = o.getContext('2d');
+    y.filter = 'blur(7px)';
+    y.drawImage(cv, 0, 0);
+    return o;
+}
+function samp(i, blur, pest) { const cv = drawSample(S.crop, i, blur, pest); S.preview = cv.toDataURL(); runImg(cv); }
+function drawAn() {
+    if (!S.an || S.tab !== 0)
+        return;
+    const y = $('cvY');
+    if (y && S.src) {
+        const c = y.getContext('2d'), k = 224 / 96;
+        c.drawImage(S.src, 0, 0, 224, 224);
+        c.lineWidth = 2;
+        c.font = 'bold 11px sans-serif';
+        S.an.pests.forEach(p => { const bx = (p.x - 2) * k, by = (p.y - 2) * k, t = PESTS[p.k].n + ' ' + p.conf + '%'; c.strokeStyle = '#ffd23f'; c.strokeRect(bx, by, (p.w + 4) * k, (p.h + 4) * k); c.fillStyle = '#ffd23f'; c.fillRect(bx, by - 13, c.measureText(t).width + 6, 13); c.fillStyle = '#111'; c.fillText(t, bx + 3, by - 3); });
+    }
+    [['cvE', S.an.edge], ['cvL', S.an.lm]].forEach(([id, d]) => { const c = $(id); if (c)
+        c.getContext('2d').putImageData(new ImageData(d, 96, 96), 0, 0); });
+}
+function flush() { S.cases.forEach(c => { if (c.queued) {
+    c.queued = false;
+    S.counts[c.district]++;
+} }); }
+function setOnline(v) { S.online = v; if (v)
+    flush(); render(); }
+function pick(e) { const f = e.target.files[0]; if (!f)
+    return; const im = new Image(); im.onload = () => { S.preview = im.src; runImg(im); }; im.src = URL.createObjectURL(f); }
+
+// ============================================================
+// 12. TAB 1 - FARMER APP
+// ============================================================
+function farmer() {
+    const u = UI[S.lang], c = CROPS[S.crop], r = S.res, done = r && r.conf >= THRESH;
+    let res = '', an = '', yo = '';
+    if (r) {
+        const cc = CROPS[r.crop], z = r.d, a = S.an, adv = z.k === 'H' ? H[S.lang] : z.p ? cc.t[S.lang] : ADV[z.k][S.lang];
+        res = `<div class="panel"><h3>${cc.n}: ${zname(z)}</h3>
+ <div class="row"><span class="tag ${done ? 'ok' : 'warn'}">${u.sure} ${r.conf}%</span>${z.k === 'H' ? '' : `<span class="tag ${r.sev ? 'bad' : 'info'}">${u.sev[r.sev]}</span>`}</div>
+ <div class="bar"><i style="width:${r.conf}%"></i></div>
+ ${done ? `<h3 style="margin-top:10px">${u.adv}</h3><p style="margin:0">${adv}</p>` : `<p class="bad" style="margin:10px 0 0">${u.low}${S.online ? '' : ' (queued until you are back online)'}</p>`}</div>`;
+        const top = a.pr.map((p, i) => [p, i]).sort((x, y) => y[0] - x[0]).slice(0, 3);
+        an = `<div class="panel"><h2>CNN analysis</h2><div class="cnn">${['Input 96×96', 'Conv 3×3 + ReLU', 'Max-pool', 'Conv 3×3 + ReLU', 'Global pool', 'Dense', 'Softmax'].join('<i>›</i>').replace(/([^<>›]+)(?=<i>|$)/g, '<span>$1</span>')}</div>
+ <div class="maps"><figure><canvas id="cvE" width="96" height="96"></canvas><figcaption>Edge filters</figcaption></figure><figure><canvas id="cvL" width="96" height="96"></canvas><figcaption>Lesion map (red)</figcaption></figure></div>
+ <div class="row"><span class="tag info">Lesion area ${(a.les * 100).toFixed(1)}%</span><span class="tag info">${a.spots} spots</span><span class="tag info">Sharpness ${a.sh.toFixed(1)}</span></div>
+ <h3>Class probabilities</h3>${top.map(([p, i]) => `<div class="pr"><span>${a.list[i].n}</span><div class="bar"><i style="width:${p * 100}%"></i></div><b>${Math.round(p * 100)}%</b></div>`).join('')}
+ <p class="hint">Demo: real convolutions run on your photo, but the final disease layer uses hand-set weights, so results are indicative only. Replace it with a trained MobileNetV3 TFLite model for field accuracy.</p></div>`;
+        const pc = {};
+        a.pests.forEach(q => (pc[q.k] = pc[q.k] || []).push(q.conf));
+        yo = `<div class="panel"><h2>YOLOv8 pest detection</h2><div class="cnn">${['Input', 'CSP backbone', 'PAN neck', 'Detect head', 'NMS'].map(t => `<span>${t}</span>`).join('<i>›</i>')}</div>
+ <canvas id="cvY" width="224" height="224" style="width:100%;max-width:320px;border-radius:8px;border:1px solid var(--line)"></canvas>
+ ${a.pests.length ? Object.entries(pc).map(([k, c]) => `<p style="margin:8px 0 2px"><b>${c.length} × ${pname(k)}</b> <span class="tag info">avg ${Math.round(c.reduce((x, y) => x + y) / c.length)}%</span></p><p style="margin:0">${PESTS[k].a[S.lang]}</p>`).join('') : '<p class="hint">No pests detected in this photo.</p>'}
+ <p class="hint">Demo: the boxes come from blob detection on your photo, not a trained YOLOv8. Replace this step with a YOLOv8n TFLite model trained on labeled pest images.</p></div>`;
+    }
+    const mine = S.cases.map(k => `<div class="case"><b>#${k.id} ${CROPS[k.crop].n}</b> <span class="tag ${k.status === 'pending' ? 'warn' : 'ok'}">${k.status === 'pending' ? (k.queued ? 'Waiting for network' : 'With KVK officer') : 'Answered'}</span>
+ ${k.status === 'answered' ? `<p style="margin:6px 0">Officer says: <b>${k.ans}</b>. ${k.reply}<br><span class="hint">Sent by ${k.ch}</span></p>${k.fb ? `<span class="tag ok">Feedback: ${k.fb}</span>` : `<div class="row"><span class="hint">Did it help?</span><button class="btn alt" onclick="fb(${k.id},'Worked')">Yes</button><button class="btn alt" onclick="fb(${k.id},'Did not work')">No</button></div>`}` : ''}</div>`).join('');
+    return step([2, 3, 4, 6]) + `<div class="grid"><div class="phone">
+ <div class="row" style="justify-content:space-between"><div class="seg">${Object.entries(LANGS).map(([k, v]) => `<button class="${k == S.lang ? 'on' : ''}" onclick="S.lang='${k}';render()">${v}</button>`).join('')}</div>
+ <button class="tag ${S.online ? 'ok' : 'bad'}" style="background:none;cursor:pointer" onclick="setOnline(${!S.online})" aria-pressed="${S.online}">${S.online ? 'Online' : 'Offline'}</button></div>
+ <label>District</label><select onchange="S.district=this.value;render()">${Object.keys(S.counts).map(d => `<option${d == S.district ? ' selected' : ''}>${d}</option>`).join('')}</select>
+ <label style="margin-top:8px">Crop</label><div class="crops">${Object.entries(CROPS).map(([k, v]) => `<button class="${k == S.crop ? 'on' : ''}" onclick="S.crop='${k}';S.res=null;S.an=null;S.preview=null;render()">${v.n}</button>`).join('')}</div>
+ <div class="leaf" style="margin-top:10px">${S.preview ? `<img src="${S.preview}" alt="Your crop photo">` : 'No photo yet'}</div>
+ <div class="row"><label class="btn" style="color:var(--on);cursor:pointer">${u.cap}<input type="file" accept="image/*" capture="environment" hidden onchange="pick(event)"></label></div>
+ <div class="row"><span class="hint">Try a sample leaf:</span>${DZ[S.crop].map((z, i) => `<button class="btn alt" onclick="samp(${i})">${z.n}</button>`).join('')}<button class="btn alt" onclick="samp(-1)">Healthy</button><button class="btn alt" onclick="samp(-1,0,'w')">Whiteflies</button><button class="btn alt" onclick="samp(-1,0,'d')">Aphids</button><button class="btn alt" onclick="samp(0,1)">Blurry</button></div>
+ <p class="hint" style="margin:6px 0 0">Diagnosis runs on the phone, so it works offline.</p></div>
+ <div>${res || '<div class="panel hint">Pick a crop and take or choose a photo. Results and advice appear here in your language.</div>'}${an}${yo}
+ <div class="panel"><h2>My cases</h2>${mine || '<span class="hint">Cases the app could not settle appear here after escalation.</span>'}</div></div></div>`;
+}
+
+// ============================================================
+// Farmer feedback (Did it help?)
+// ============================================================
+function fb(id, v) { const c = S.cases.find(x => x.id == id); c.fb = v; S.fb[v === 'Worked' ? 'yes' : 'no']++; render(); }
+
+// ============================================================
+// 13. TAB 2 - EARLY WARNING: rule-based risk from weather
+// ============================================================
+function risk() {
+    const c = CROPS[S.crop], ru = c.rule, w = S.w;
+    const conds = [['Humidity ≥ ' + ru.h + '%', w.h >= ru.h], ['Temp ' + ru.t[0] + '–' + ru.t[1] + '°C', w.t >= ru.t[0] && w.t <= ru.t[1]], ['Rain ≥ ' + ru.r + ' mm', w.r >= ru.r]];
+    const n = conds.filter(x => x[1]).length;
+    return { conds, n, lvl: ['Low', 'Low', 'Medium', 'High'][n], cls: ['ok', 'ok', 'warn', 'bad'][n] };
+}
+function warn() {
+    const k = risk(), c = CROPS[S.crop], w = S.w;
+    const sl = (key, lab, min, max, unit) => `<label>${lab}: <b>${w[key]}${unit}</b></label><input type="range" min="${min}" max="${max}" value="${w[key]}" oninput="S.w['${key}']=+this.value;warnUpd()">`;
+    return step([0, 1]) + `<div class="grid"><div class="panel"><h2>Weather and farm inputs</h2>
+ <label>Crop</label><select onchange="S.crop=this.value;S.smsText=null;render()">${opts(CROPS, S.crop)}</select>
+ <div class="row"><button class="btn alt" onclick="S.w={h:88,t:27,r:12};S.smsText=null;render()">Load IMD forecast (sample)</button></div>
+ ${sl('h', 'Humidity', 30, 100, '%')}${sl('t', 'Temperature', 10, 42, '°C')}${sl('r', 'Rainfall', 0, 60, ' mm')}</div>
+ <div class="panel" id="riskbox"></div></div>`;
+}
+function warnUpd() { const k = risk(); $('riskbox').innerHTML = riskHTML(k); document.querySelectorAll('#t1 label b').forEach((b, i) => { b.textContent = [S.w.h + '%', S.w.t + '°C', S.w.r + ' mm'][i]; }); }
+
+// ============================================================
+// 13. TAB 2 - EARLY WARNING: rule-based risk from weather
+// ============================================================
+function riskHTML(k) {
+    const c = CROPS[S.crop];
+    return `<h2>${c.n}: ${c.d} risk</h2><span class="tag ${k.cls}" style="font-size:16px">${k.lvl} risk</span>
+ <p class="hint">Rule-based: each known disease trigger that is met raises the score, before any symptom shows.</p>
+ ${k.conds.map(x => `<div>${x[1] ? '<span class="bad">●</span>' : '<span class="ok">○</span>'} ${x[0]}</div>`).join('')}
+ ${k.n >= 2 ? `<div class="row"><button class="btn y" onclick="sendAlert()">Send alert by SMS/IVR</button></div>` : ''}
+ ${S.smsText ? `<div class="sms">${S.smsText}</div><p class="hint">Sent to farmers growing ${c.n.toLowerCase()} in ${S.district}.</p>` : ''}`;
+}
+function sendAlert() { const c = CROPS[S.crop]; S.smsText = { en: `CropDoc: ${c.d} risk is high for ${c.n} in the next 3 days. Check leaves today.`, hi: `CropDoc: अगले 3 दिनों में ${c.n} में ${c.d} का खतरा अधिक है। आज पत्ते जाँचें।`, mr: `CropDoc: पुढील ३ दिवसांत ${c.n} मध्ये ${c.d} चा धोका जास्त आहे. आज पाने तपासा.`, ta: `CropDoc: அடுத்த 3 நாட்களில் ${c.n} பயிரில் ${c.d} அபாயம் அதிகம். இன்றே இலைகளைச் சரிபார்க்கவும்.` }[S.lang]; S.alerts[S.district]++; $('riskbox').innerHTML = riskHTML(risk()); }
+
+// ============================================================
+// 14. TAB 3 - KVK OFFICER DASHBOARD
+// ============================================================
+function kvk() {
+    const p = S.cases.filter(c => c.status === 'pending' && !c.queued), a = S.cases.filter(c => c.status === 'answered');
+    const tot = S.cases.length, fbT = S.fb.yes + S.fb.no;
+    return step([4, 5, 6, 7]) + `<div class="k"><div><b>${p.length}</b><span>Waiting for review</span></div><div><b>${a.length}</b><span>Answered</span></div><div><b>${S.labels}</b><span>Expert labels added for retraining</span></div><div><b>${fbT ? Math.round(S.fb.yes / fbT * 100) + '%' : '–'}</b><span>Farmers say advice worked</span></div></div>
+ <div class="panel"><h2>Escalated cases (confidence below ${THRESH}%)</h2>
+ ${p.length ? p.map(c => `<div class="case"><b>#${c.id} ${CROPS[c.crop].n}</b>, ${c.district} <span class="tag warn">AI guessed ${c.dis} at ${c.conf}%</span>
+ <div class="row"><div style="flex:1;min-width:160px"><label>Confirmed diagnosis</label><select id="a${c.id}">${[...DZ[c.crop].map(z => z.n), 'Nutrient deficiency', 'Other pest', 'Healthy'].map(x => `<option>${x}</option>`).join('')}</select></div>
+ <div style="flex:1;min-width:120px"><label>Reply by</label><select id="c${c.id}"><option>App</option><option>SMS</option><option>IVR call</option></select></div></div>
+ <label>Advice to farmer</label><textarea id="r${c.id}" rows="2">${CROPS[c.crop].t.en}</textarea>
+ <div class="row"><button class="btn" onclick="reply(${c.id})">Send reply</button></div></div>`).join('') : '<span class="hint">No pending cases. Send one from the Farmer app using the Blurry sample.</span>'}</div>`;
+}
+function reply(id) { const c = S.cases.find(x => x.id == id); c.ans = $('a' + id).value; c.ch = $('c' + id).value; c.reply = $('r' + id).value; c.status = 'answered'; S.labels++; render(); }
+
+// ============================================================
+// 15. TAB 4 - DISTRICT VIEW
+// ============================================================
+function dist() {
+    const m = Math.max(...Object.values(S.counts));
+    return step([7]) + `<div class="panel"><h2>Outbreak reports by district</h2><p class="hint">Escalated cases from farmers, live. This is the view the State Agriculture Department would use.</p>
+ ${Object.entries(S.counts).sort((a, b) => b[1] - a[1]).map(([d, n]) => `<div class="dist"><span>${d}</span><div class="bar"><i style="width:${n / m * 100}%;background:${n / m > .7 ? 'var(--r)' : 'var(--g)'}"></i></div><b>${n}</b></div>`).join('')}</div>
+ <div class="panel"><h2>Early-warning alerts sent</h2>${Object.entries(S.alerts).map(([d, n]) => `<div class="dist"><span>${d}</span><div class="bar"><i style="width:${n * 20}%;background:var(--y)"></i></div><b>${n}</b></div>`).join('')}</div>`;
+}
+
+// ============================================================
+// 16. RENDER: redraw the active tab, then start the app
+// ============================================================
+function render() {
+    $('nav').innerHTML = TABS.map((t, i) => `<button class="${i == S.tab ? 'on' : ''}" onclick="S.tab=${i};render()">${t}</button>`).join('');
+    [farmer, warn, kvk, dist].forEach((f, i) => { $('t' + i).className = 'tab' + (i == S.tab ? ' on' : ''); if (i == S.tab) {
+        $('t' + i).innerHTML = f();
+        if (i == 1)
+            $('riskbox').innerHTML = riskHTML(risk());
+    } });
+    drawAn();
+}
+render();
+</script>
+</body>
+</html>
